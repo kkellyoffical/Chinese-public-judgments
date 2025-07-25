@@ -1397,6 +1397,78 @@ class WenshuBrowserSimulator:
         except Exception as e:
             print(f"⚠ 关闭浏览器时出错: {str(e)}")
 
+    def select_region(self, region_name):
+        """选择任意地区"""
+        print(f"\n正在选择地区: {region_name}...")
+        try:
+            self.page.wait_for_load_state('networkidle')
+            # 多种方式查找地区元素
+            selectors = [
+                f'div:has-text("{region_name}")',
+                f'a:has-text("{region_name}")',
+                f'span:has-text("{region_name}")',
+                f'xpath=//div[contains(text(), "{region_name}")] | //a[contains(text(), "{region_name}")] | //span[contains(text(), "{region_name}")]'
+            ]
+            region_element = None
+            for selector in selectors:
+                try:
+                    elements = self.page.query_selector_all(selector)
+                    if elements:
+                        region_element = elements[0]
+                        print(f"✓ 找到地区选项: {region_name}, 选择器: {selector}")
+                        break
+                except:
+                    continue
+            if region_element:
+                region_element.scroll_into_view_if_needed()
+                region_element.click()
+                print(f"✓ 成功选择地区: {region_name}")
+                self.page.wait_for_load_state('networkidle', timeout=10000)
+                self.page.screenshot(path=f'{region_name}_selected.png')
+                return True
+            else:
+                print(f"✗ 未找到地区选项: {region_name}")
+                return False
+        except Exception as e:
+            print(f"✗ 选择地区失败: {str(e)}")
+            return False
+
+    def select_case_reason(self, case_reason):
+        """选择案由（案件类型）"""
+        print(f"\n正在选择案由: {case_reason}...")
+        try:
+            self.page.wait_for_load_state('networkidle')
+            # 假设案由在高级检索面板下的案由下拉框或列表
+            selectors = [
+                f'div:has-text("{case_reason}")',
+                f'a:has-text("{case_reason}")',
+                f'span:has-text("{case_reason}")',
+                f'xpath=//div[contains(text(), "{case_reason}")] | //a[contains(text(), "{case_reason}")] | //span[contains(text(), "{case_reason}")]'
+            ]
+            reason_element = None
+            for selector in selectors:
+                try:
+                    elements = self.page.query_selector_all(selector)
+                    if elements:
+                        reason_element = elements[0]
+                        print(f"✓ 找到案由选项: {case_reason}, 选择器: {selector}")
+                        break
+                except:
+                    continue
+            if reason_element:
+                reason_element.scroll_into_view_if_needed()
+                reason_element.click()
+                print(f"✓ 成功选择案由: {case_reason}")
+                self.page.wait_for_load_state('networkidle', timeout=10000)
+                self.page.screenshot(path=f'{case_reason}_selected.png')
+                return True
+            else:
+                print(f"✗ 未找到案由选项: {case_reason}")
+                return False
+        except Exception as e:
+            print(f"✗ 选择案由失败: {str(e)}")
+            return False
+
 
 def main():
     """主函数"""
