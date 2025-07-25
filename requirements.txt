@@ -1,0 +1,6 @@
+playwright==1.40.0
+beautifulsoup4==4.12.2
+lxml==4.9.3
+pymongo==4.6.0
+pandas==2.1.4
+requests==2.31.0 
